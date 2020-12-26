@@ -1,0 +1,55 @@
+
+# 活动配置
+.DataActivityItem {
+    aId         0: integer          # 标识
+    aTemplateId 1: integer          # 活动模版ID
+    aConfigId   2: integer          # 活动配置ID（是活动才有）
+    showTime    3: integer          # 预览时间 (有需传)
+    startTime   4: integer          # 开始时间 (有需传)
+    endTime     5: integer          # 结束时间 (有需传)
+    hideTime    6: integer          # 下架时间 (有需传)
+    param       7: string           # 定制参数
+    title       8: string           # 活动标题
+    status      9: integer          # 活动状态
+}
+
+# 获取活动列表接口
+activity_get_info_list 20800 {
+    request {
+        ids 0: *integer             # 活动ID数组
+    }
+    response {
+        res 0: string               # 返回数据  json格式
+    }
+}
+
+# 活动通用接口
+activity_do_cmd 20801 {
+    request {
+        id 0: integer               # 活动id
+        cmd 1: string               # 调用相应活动id接口
+        param 2: string             # 接口参数  json格式
+    }
+    response {
+        code 0: integer             # 返回结果码
+        res  1: string              # 返回数据  json格式
+    }
+}
+
+# 活动配置列表
+activity_get_config_list 20802 {
+    request {
+    }
+    response {
+        res 0: *DataActivityItem    # 可展示活动配置列表
+    }
+}
+
+# 活动信息更新
+on_activity_notify 20890 {
+    request {
+        aId 0: integer              # 活动id
+        cmd 1: string               # 推送命令
+        data 2: string              # 数据  json格式
+    }
+}
