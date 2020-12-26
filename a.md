@@ -11,12 +11,12 @@ type|8
 ## module
 module|range|info|protocol sum|type sum
 :------:|:------:|:------:|:------:|:------:
-[activity](https://github.com/alphaflyingfish/autodump/./sprotos/activity.sproto)|`nil`|`nil`|4|8
+[activity](https://github.com/alphaflyingfish/autodump/blob/master//./sprotos/activity.sproto)|`nil`|`nil`|4|8
 
 ## list
 protocol|tag|request|response
 :------:|:------:|:------:|:------:
-[activity_get_info_list](https://github.com/alphaflyingfish/autodump/./sprotos/activity.sproto#L17)|20800|[activity_get_info_list.request](https://github.com/alphaflyingfish/autodump/./sprotos/activity.sproto#L19)|[activity_get_info_list.response](https://github.com/alphaflyingfish/autodump/./sprotos/activity.sproto#L22)
-[activity_do_cmd](https://github.com/alphaflyingfish/autodump/./sprotos/activity.sproto#L27)|20801|[activity_do_cmd.request](https://github.com/alphaflyingfish/autodump/./sprotos/activity.sproto#L29)|[activity_do_cmd.response](https://github.com/alphaflyingfish/autodump/./sprotos/activity.sproto#L34)
-[activity_get_config_list](https://github.com/alphaflyingfish/autodump/./sprotos/activity.sproto#L40)|20802|`nil`|[activity_get_config_list.response](https://github.com/alphaflyingfish/autodump/./sprotos/activity.sproto#L44)
-[on_activity_notify](https://github.com/alphaflyingfish/autodump/./sprotos/activity.sproto#L49)|20890|[on_activity_notify.request](https://github.com/alphaflyingfish/autodump/./sprotos/activity.sproto#L51)|`nil`
+[activity_get_info_list](https://github.com/alphaflyingfish/autodump/blob/master//./sprotos/activity.sproto#L17)|20800|[activity_get_info_list.request](https://github.com/alphaflyingfish/autodump/blob/master//./sprotos/activity.sproto#L19)|[activity_get_info_list.response](https://github.com/alphaflyingfish/autodump/blob/master//./sprotos/activity.sproto#L22)
+[activity_do_cmd](https://github.com/alphaflyingfish/autodump/blob/master//./sprotos/activity.sproto#L27)|20801|[activity_do_cmd.request](https://github.com/alphaflyingfish/autodump/blob/master//./sprotos/activity.sproto#L29)|[activity_do_cmd.response](https://github.com/alphaflyingfish/autodump/blob/master//./sprotos/activity.sproto#L34)
+[activity_get_config_list](https://github.com/alphaflyingfish/autodump/blob/master//./sprotos/activity.sproto#L40)|20802|`nil`|[activity_get_config_list.response](https://github.com/alphaflyingfish/autodump/blob/master//./sprotos/activity.sproto#L44)
+[on_activity_notify](https://github.com/alphaflyingfish/autodump/blob/master//./sprotos/activity.sproto#L49)|20890|[on_activity_notify.request](https://github.com/alphaflyingfish/autodump/blob/master//./sprotos/activity.sproto#L51)|`nil`
