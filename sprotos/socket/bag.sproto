@@ -1,0 +1,203 @@
+
+
+# 物品详情
+.DataItemInfo {
+    id 0: integer               #省略值0
+    type 1: integer             #省略值0
+    name 2: string              #省略值nil
+    level 3: integer            #省略值0
+    qa 4: integer               #省略值0
+    detail 5: string            #省略值nil
+    icon 6: string              #省略值nil
+    middleIcon 7: string        #省略值nil
+    smallIcon 8: string         #省略值nil
+    enableSale 9: boolean       #省略值false
+    enableHe 10: boolean        #省略值false
+    enableEquip 11: boolean     #省略值false
+    enableUse 12: boolean       #省略值false
+    price 13: integer           #省略值0
+    hasLastDate 14: boolean     #省略值false
+    count 15: integer           #省略值0
+    isGift 16: boolean          #省略值false
+    isFirstGift 17: boolean     #省略值false
+    signIcon 18: string         #省略值nil
+    enableComposite 19: boolean #省略值true
+    enableBatchHe 20: boolean   #省略值false
+    enableBatchUse 21: boolean  #省略值false
+    termOfValidity 22: integer  #省略值nil
+    seq 23: integer             #省略值0
+    vipLimit 24: integer        #省略值0
+    ver 100: integer            #不可省略。增加配置时的版本
+}
+
+# 奖品兑换物品信息
+.DataExchangeItem {
+    id 0:integer                    # 编号ID
+    seq 1: integer                  # 排序
+    tid 2: integer                  # tab ID
+    consumeItems 3: *DataItem       # 消耗物品列表
+    items 4: *DataItem              # 兑换物品列表
+}
+
+#增量获取物品配置列表
+backpack_get_config 20200 {
+    request {
+        uid 0: integer
+        ver 1: integer                  #本地已存在的最大版本
+    }
+
+    response {
+        code 0: integer
+        list 1: *DataItemInfo           #仅返回比请求的ver大的物品配置
+    }
+}
+
+#请求出售指定数量的物品
+backpack_sale_item 20201 {
+    request {
+        uid 0: integer
+        .Item {
+            id 0: integer           # 物品ID
+            price 1: integer        # 单价
+            num 2: integer          # 出售数量
+        }
+        item 1: Item
+    }
+
+    response {
+        code 0: integer
+    }
+}
+
+#请求出售整个计时的物品
+backpack_sale_time_item 20202 {
+    request {
+        uid 0: integer
+        .Item {
+            id 0: integer           # 物品ID
+            total 1: integer        # 总价
+            bid 2: integer          # 物品在背包中的ID（仅不可叠加的物品才有该字段）
+        }
+        item 1: Item
+    }
+    response {
+        code 0: integer
+    }
+}
+
+#获取背包信息
+backpack_get_info 20203 {
+    request {
+        uid 0: integer
+    }
+    response {
+        code 0: integer
+        items 1: *DataItemBag       # 物品列表
+    }
+}
+
+
+#请求给玩家增减物品
+backpack_add_items 20204 {
+    request {
+        uid 0: integer
+        items 1: *DataItemBand      # 物品列表
+    }
+    response {
+        code 0: integer
+    }
+}
+
+#使用消耗品
+backpack_use_item 20205 {
+    request {
+        uid 0: integer
+        id 1: integer               # 物品ID
+        count 2: integer            # 使用物品数量（批量），neo
+        bid 3: integer              # 物品在背包中的ID（仅不可叠加的物品才有该字段）
+    }
+    response {
+        code 0: integer
+        items 1: *DataItem
+    }
+}
+
+# 奖品兑换中心 - 获取可兑换信息
+backpack_exchange_get_info 20206 {
+    request {
+        uid 0: integer
+    }
+    response {
+        code 0: integer
+        exchangeItemList 1: *DataExchangeItem   # 可兑换物品列表
+    }
+}
+# 奖品兑换中心 - 兑换物品
+backpack_exchange_do_item 20207 {
+    request {
+        uid 0: integer
+        id 1: integer                   # 编号ID
+    }
+    response {
+        code 0: integer
+        items 1: *DataItem              # 成功兑换的物品
+        itemInfo 2: DataExchangeItem    # 对于编号物品信息更新
+        errMsg 3: string                # 失败提示
+    }
+}
+################## 提现协议 ##################
+# 请求提现
+backpack_withdraw_item 20208 {
+    request {
+        uid 0: integer
+        id 1: integer                   # 提现ID
+        dType 2: integer                # 提现方式（1:微信，2:支付宝）
+        alipayAccount 3: string         # 支付宝账号
+        alipayName 4: string            # 支付宝昵称
+        testData 5: string              # 调试参数（json）[isRealWithDraw:是否真实领 1:为真实领取 0:测试领取（不到账） status:订单状态，code:订单code]
+    }
+    response {
+        code 0: integer
+        dayTimes 1: integer             # 当天提现次数
+        dayCount 2: integer             # 当天提现金额（单位分）
+        orderNo 3: string               # 订单号
+        rCode 5: string                 # 红包码
+    }
+}
+
+# 提现记录
+backpack_withdraw_list 20209 {
+    request {
+        uid 0: integer
+        lastTime 1: integer             # 最后一次拉取记录时间
+    }
+    response {
+        code 0: integer
+        drawInfoList 1: *DataWithdraw   # 提现记录
+    }
+}
+
+# 获取提现信息
+backpack_withdraw_info 20210 {
+    request {
+        uid 0: integer
+    }
+    response {
+        code 0: integer
+        dayTimes 1: integer             # 当天提现次数
+        dayCount 2: integer             # 当天提现金额（单位分）
+        alipayAccount 3: string         # 支付宝账号
+        alipayName 4: string            # 支付宝昵称
+    }
+}
+
+# 提现物品信息
+backpack_withdraw_item_list 20211 {
+    request {
+        uid 0: integer
+    }
+    response {
+        code 0: integer
+        drawItemList 1: *DataWithdrawItem   # 提现物品列表
+    }
+}

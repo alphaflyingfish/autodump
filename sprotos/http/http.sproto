@@ -1,0 +1,94 @@
+
+.package {
+    type 0 : integer
+    session 1 : integer
+}
+
+#登录
+usr_login 1001 {
+    request {
+        uid 0: integer
+        version 1: string           # 版本号
+        password 2: string          # 密码
+        channel 3: integer          # 渠道号
+        apn 4: string               # 玩家网络状态
+        operator 5: string          # 运营商类型字段
+        platform 6: string          # 登录平台
+        appVerison 7: string        # 对内版本号
+        uuid 8: string              # UUID
+        udid 9: string              # UDID
+        region 10: string           # 省份
+        city 11: string             # 城市
+        location 12: string         # 经纬度（格式：经度在前，纬度在后，经纬度间以“,”分割）
+    }
+    response {
+        code 0: integer
+        sysTime 1: integer          # 服务器时间
+        ip 2: string                # Socket连接的IP
+        port 3: integer             # Socket连接的Port
+        token 4: string             # token
+        http 5: integer             # HTTP PORT
+        registerTime 6: integer     # 注册时间
+        errorMsg 7: string          # 登陆失败错误信息
+        isGuest 8: boolean          # 是否游客
+        wsPort 9: integer           # websocket连接端口
+        uuid 10: string             # UUID
+        configVersion 11: string    # configVersion
+    }
+}
+
+#注册
+usr_register 1002 {
+    request {
+        version 1: string           # 版本号
+        uuid 2: string              # UUID
+        device 3: string            # 设备名称
+        sysVer 4: string            # 设备信息
+        channel 5: integer          # 渠道号
+        apn 6: string               # 玩家网络状态
+        operator 7: string          # 运营商类型字段
+        platform 8: string          # 登录平台
+        udid 9: string              # UDID
+        appVerison 10: string       # 对内版本号
+        idfa 11: string             # 广告标签
+        region 12: string           # 省份
+        city 13: string             # 城市
+        location 14: string         # 经纬度（格式：经度在前，纬度在后，经纬度间以“,”分割）
+        deviceId 15: string         # 设备号
+        xwId 16: string             # 闲玩ID(备用)
+    }
+    response {
+        code 0: integer
+        sysTime 1: integer          # 服务器时间
+        ip 2: string                # Socket连接的IP
+        port 3: integer             # Socket连接的Port
+        token 4: string             # token
+        uid 5: integer              #
+        password 6: string          # 密码
+        http 7: integer             # HTTP PORT
+        registerTime 8: integer     # 注册时间
+        errorMsg 9: string          # 登陆失败错误信息
+        isGuest 10: boolean         # 是否游客
+        wsPort 11: integer          # websocket连接端口
+        uuid 12: string             # UUID
+        configVersion 13: string    # configVersion
+    }
+}
+
+# 玩家反馈
+usr_submitFeedback 4100 {
+    request {
+        uid 0: integer
+        content 1: string           # 反馈内容
+        uuid 2: string              # UUID
+        device 3: string            # 设备名称
+        sysVer 4: string            # 设备信息
+        channel 5: integer          # 渠道号
+        apn 6: string               # 玩家网络状态
+        operator 7: string          # 运营商类型字段
+        version 8: string           # 版本号
+    }
+    response {
+        code 0: integer
+    }
+}

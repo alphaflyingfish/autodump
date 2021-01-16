@@ -1,0 +1,199 @@
+
+.CardInfo {
+    id 0: integer
+    star 1: integer         # 卡牌星级
+    color 2: integer        # 1红色2黄色3绿色4蓝色5万能色
+    quality 3: integer      # 1普通2稀有3史诗4传说
+}
+
+.PlayerInfo {
+    uid 0: integer
+    nickname 1: string
+    image 2: string
+    cards 3: *CardInfo      # 玩家局内卡牌组
+    castleLv 4: integer     # 城堡等级
+    castleMaxHp 5: integer  # 城堡最大血量
+    castleCurHp 6: integer  # 城堡当前血量
+    level 7: integer        # 段位等级
+    star 8: integer         # 段位星数
+}
+
+.BuffInfo {
+    id 0: integer                       # 配置ID
+    keepTimesMax 1: integer             # 最大持续次数  -1:不限次数
+    keepTimes 2: integer                # 持续次数
+}
+
+.HeroInfo {
+    sid 0: integer
+    id 1: integer
+    hp 2: integer
+    attack 3: integer
+    level 4: integer
+    callIdx 5: integer
+    buffList 6:*BuffInfo
+    bindBlockId 7:integer
+    summon 8: integer                   # 是否是召唤物 0 不是 1 是
+}
+
+.GridInfo {
+    id 0: integer
+    x 1: integer
+    y 2: integer
+    color 3: integer
+}
+
+.QiPanInfo {
+    grids 0: *GridInfo
+    players 1: *PlayerInfo
+    heros 2:*HeroInfo
+}
+
+.AttackInfo {
+    castor 0: integer                           # 施法技能的英雄SID
+    .EffectInfo {
+        .Damage {
+            target 0: integer                   # -1：敌方城池 -2：己方城池 其他：英雄SID
+            damage 1: integer                   # 造成的伤害或提升数值
+            spillDamage 2: integer              # 英雄死亡后对城池伤害
+            buffList 3: *BuffInfo               # buffList
+        }
+        effectId 0: integer                     # 效果ID
+        dmgInfo 1: *Damage
+        dmgZone 2: *integer                     # 效果的作用区域
+    }
+    effectInfo 1: EffectInfo
+    ownerPlayerUid 2: integer
+}
+
+.GridUpdate {
+    castor 0: integer
+    grids 1: *GridInfo
+    updateType 2: integer   #1替换2消除
+}
+
+.HeroUpdate {
+    castor 0: integer
+    heros 1:*HeroInfo
+}
+
+.AttackUpdate {
+    attackInfo 0: AttackInfo
+    updateInfo 1: GridUpdate
+    herosInfo 2: HeroUpdate
+}
+
+.TestInfo {
+    testGrids 0: *GridInfo      # 测试地图
+    robotCards 1: *integer      # 机器人卡牌组
+    castleLv 2: integer         # 机器人城池等级
+}
+
+# 棋盘信息
+battle_get_info 20000 {
+    request {
+        uid 0: integer
+    }
+    response {
+        code 0: integer
+        qipan 1: QiPanInfo
+    }
+}
+
+# 请求操作
+battle_operate 20001 {
+    request {
+        uid 0: integer
+        grids 1: *integer
+        help 2: integer
+    }
+    response {
+        code 0: integer
+    }
+}
+
+# 进入匹配
+battle_ready 20002 {
+    request {
+        uid 0: integer
+        testInfo 1: TestInfo
+    }
+    response {
+        code 0: integer
+    }
+}
+
+# 取消匹配
+battle_cancel_ready 20003 {
+    request {
+        uid 0: integer
+    }
+    response {
+        code 0: integer
+    }
+}
+
+# 技能动画播放完成
+battle_play_finish 20004 {
+    request {
+        uid 0 : integer
+        round 1: integer
+    }
+    response {
+        code 0 : integer
+    }
+}
+
+on_battle_qipan_info 30000 {
+    request {
+        qipan 0: QiPanInfo
+        reason 1: integer       # 推送原因 0 强制同步信息 1 消除并生成英雄 2 英雄攻击后
+        grids 2: *integer       # 仅当 reason = 1 时使用
+        operatorUid 3: integer  # 此次操作的玩家
+    }
+}
+
+on_battle_operate_info 30001 {
+    request {
+        curRound 0: integer
+        operatorUid 1: integer
+        operateEndTime 2: integer
+    }
+}
+
+on_battle_qipan_settle 30002 {
+    request {
+        winner 0: integer       # 胜利者
+        starChanges 1: integer  # 星数变化
+        players 2: *PlayerInfo
+    }
+}
+
+# 匹配成功，下发棋盘数据
+on_battle_start 30003 {
+    request {
+        qipan 0: QiPanInfo
+    }
+}
+
+# 解散对战
+on_battle_finish 30004 {
+    request {
+        code 0: integer
+    }
+}
+
+# 攻击信息
+on_battle_attack 30005 {
+    request {
+        atkUpdate 0: *AttackUpdate
+    }
+}
+
+# 回合攻击结束
+on_battle_attack_finish 30006 {
+    request {
+        curRound 0: integer
+    }        
+}
+

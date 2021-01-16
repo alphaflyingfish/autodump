@@ -1,0 +1,296 @@
+# 用户相关协议
+# 玩家基础信息
+.DataUserBaseInfo {
+    uid 0: integer                  # 玩家uid
+    nickname 1: string              # 玩家昵称
+    city 2: string                  # 城市
+    registerVersion 3: string       # 注册版本
+    phone 4: string                 # 绑定的手机号码
+}
+
+# 玩家时间信息
+.DataUserTimeInfo {
+    sysTime 0: integer              # 服务器时间
+    debugTime 1: integer            # 调试时间（固定）
+}
+
+# 实名认证信息
+.DataIdentity {
+    type 0: integer
+    jmName 1: string                # 名称
+    jmCard 2: string                # 身份证
+    jmBirthDate 3: string           # 嘉米出生年月日格式 ‘20060601’
+    chBirthDate 4: string           # 渠道出生年月日格式 ‘20060601’
+}
+
+# 防沉迷信息
+.DataAntiAddiction {
+    isRealName 0: boolean           # 是否已实名认证
+    endTimeOffline 1: integer       # 总时间限制：不能玩游戏的最小时间戳
+    minutesOnline 2: integer        # 总在线时间的限制分钟数
+    dayCountLogin 3: integer        # 注册时长的限制天数（游客）
+    onlineClockRange 4: *integer    # 日可游戏的限制时间范围（单位：小时-24小时制）
+    items 5: *DataItem              # 实名认证奖励物品
+}
+
+# 行为次数统计信息
+.DataTimesInfo {
+    signMaxSerial 0: integer        # 最高连续签到次数
+    signTotal 1: integer            # 累计签到次数
+    signSerial 2: integer           # 当前连续签到次数
+    gamePassLevel 3: integer        # 通过等级
+    adTotal 4: integer              # 广告次数
+}
+
+#摇红包信息
+.ShakeInfo {
+    remainCount 0: integer          # 剩余次数
+    cdTime 1: integer               # 倒计时
+    addCount 2: integer             # 增加次数
+    redBag 3: integer               # 红包数
+}
+
+# 获取自己的信息
+h5user_self_info 10000 {
+    request {
+        uid 0: integer
+        versionCode 1: integer          # 版本code
+    }
+    response {
+        code 0: integer
+        baseInfo 1: DataUserBaseInfo    # 基础信息
+        shakeInfo 2: ShakeInfo           # 摇红包信息
+    }
+}
+
+# 设置个人信息
+h5user_setting_info 10001 {
+    request {
+        uid 0: integer
+        nickname 1: string              # 昵称
+        title 2: integer                # -1 不设置, 0 从未只设置，大于0: 设置的某个称号
+    }
+    response {
+        code 0: integer
+    }
+}
+
+# 摇一摇
+h5user_shake 10002 {
+    request {
+        uid 0: integer
+    }
+    response {
+        code 0: integer
+        count 1: integer                # 剩余次数
+        date 2: integer                 # 下次增加次数的时间
+        shakeCount 3: integer           # 摇一摇次数
+    }
+}
+# 获取摇一摇信息
+h5user_get_shake_info 10003 {
+    request {
+        uid 0: integer
+    }
+    response {
+        code 0: integer
+        count 1: integer                # 剩余次数
+        date 2: integer                 # 下次增加次数的时间
+        shakeCount 3: integer           # 已摇次数
+    }
+}
+
+#连接保活
+h5user_keepalive 10004 {
+    request {
+    }
+    response {
+        systemTime 0: integer
+    }
+}
+
+# 获取短信验证码
+h5user_sms_verification_code 10005 {
+    request {
+        uid 0: integer                  # 请求玩家
+        phone 1: string                 # 手机号码
+        smsCode 2: integer              # 验证码用处 1:绑定手机号码 2:验证手机号码
+        smsAccessKey 3: string          # 验证码签名
+    }
+    response {
+        code 0: integer
+    }
+}
+
+# 提交短信验证码
+h5user_sms_submit_verification_code 10006 {
+    request {
+        uid 0: integer                  # 请求玩家
+        phone 1: string                 # 手机号码
+        verifyCode 2: string            # 验证码
+        smsCode 3: integer              # 验证码用处 1:绑定手机号码 2:验证手机号码
+    }
+    response {
+        code 0: integer
+    }
+}
+
+# 玩家修改个人系统时间
+h5user_debug_system_time 10007 {
+    request {
+        uid 0: integer
+        time 1: integer                 # 玩家修改的时间戳
+        reset 2: integer                # 是否重置,0（空）:重置,1:系统时间,2:设置注册时间,3:退出标准时间
+    }
+    response {
+        code 0: integer                 # 返回码
+        sysTime 1: integer              # 服务器时间
+        debugTime 2: integer            # 调试时间（固定）
+    }
+}
+
+# 获取跑马灯信息
+h5user_get_marquee_info 10008 {
+    request {
+        uid 0: integer
+    }
+    response {
+        code 0: integer
+        contents 1: *string             # 消息字符串
+    }
+}
+
+# 实名认证 - 更新信息
+h5user_identity_update_info 10009 {
+    request {
+        uid 0: integer                  # 玩家ID
+        jmName 1: string                # 名称
+        jmCard 2: string                # 身份证
+        jmBirthDate 3: string           # 嘉米出生年月日格式 ‘20060601’
+        chBirthDate 4: string           # 渠道出生年月日格式 ‘20060601’
+    }
+
+    response {
+        code 0: integer
+        items 1: *DataItem
+    }
+}
+
+# 防沉迷系统 - 获取玩家游戏信息
+h5user_antiaddiction_get_info 10010 {
+    request {
+        uid 0: integer                  # 玩家ID
+        age 1: integer                  # 年龄
+    }
+
+    response {
+        code 0: integer
+        antiInfo 1: DataAntiAddiction   # 防沉迷信息
+    }
+}
+
+# 更新玩家体力值
+h5user_update_energy_info 10011 {
+    request {
+        uid 0: integer                  # 玩家ID
+    }
+
+    response {
+        code 0: integer
+        count 1: integer                # 当前体力值
+        date 2: integer                 # 最后更新体力时间
+    }
+}
+
+# 获取任务列表
+h5user_get_task_info 10012 {
+    request {
+        uid 0: integer
+    }
+    response {
+        code 0: integer
+        dayTaskList 1: *DataTask        # 每日任务
+        taskActive 2: DataTaskActive    # 任务活跃信息
+    }
+}
+
+# 领取任务完成奖励
+h5user_get_task_award 10013 {
+    request {
+        uid 0: integer
+        taskId 1: integer               # 任务ID
+    }
+    response {
+        code 0: integer
+        items 1: *DataItem              # 任务奖励
+        taskActive 2: DataTaskActive    # 任务活跃信息
+    }
+}
+
+# 领取所有任务完成奖励
+h5user_get_all_task_award 10014 {
+    request {
+        uid 0: integer
+    }
+    response {
+        code 0: integer
+        items 1: *DataItem              # 任务奖励
+        taskIdList 2: *integer          # 已领取任务
+    }
+}
+
+# 领取任务活跃奖励
+h5user_get_task_active_award 10015 {
+    request {
+        uid 0: integer
+        id 1: integer                   # 活跃值进度ID
+    }
+
+    response {
+        code 0: integer
+        items 1: *DataItem              # 任务奖励
+        ids 2: *integer                 # 已领取任务
+    }
+}
+
+# 玩家系统信息
+on_h5user_system_info 10011 {
+    request {
+        sheildList 0: *integer          # 功能ID列表
+        antiInfo 1: DataAntiAddiction   # 防沉迷信息
+        timesInfo 2: DataTimesInfo      # 行为次数统计信息
+        abValue 3: *string              # AB分群值
+        shareCode 4: string             # 分享码
+        uidBanding 5: integer           # 绑定玩家ID
+    }
+}
+
+#玩家当前物品
+on_user_items 1009 {
+    request {
+        uid 0: integer
+        .Item {
+            id 0: integer
+            count 1: integer            # 当前数量
+            add 2: integer              # 增加数量
+            bid 3: integer              # 物品在背包中的ID（仅不可叠加的物品才有该字段）
+            endTime 4: integer          # 到期时间戳
+        }
+        items 1: *Item
+    }
+}
+
+# 每日任务 - 状态更新
+on_h5user_day_task 10012 {
+    request {
+        taskList 0: *integer            # 任务列表
+    }
+}
+
+# 每日任务 - 任务活跃信息
+on_h5user_day_task_active 10013 {
+    request {
+        idList 0: *integer              # 完成ID列表
+        activeProgress 1: integer       # 当前活跃值进度
+    }
+}

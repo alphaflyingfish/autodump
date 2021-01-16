@@ -1,0 +1,50 @@
+
+# 埋点信息
+.DataEvent {
+    uid 0: integer          # 玩家ID
+    ver 1: string           # 版本号
+    chn 2: integer          # 渠道号
+    id 3: integer           # 事件ID
+    time 4: integer         # 时间
+    label 5: string         # 事件信息
+    seq 6: integer          # 事件顺序号
+    scene 7: string         # 场景名称
+}
+
+# 埋点数量信息
+.DataCountEvent {
+    uid 0: integer          # 玩家ID
+    ver 1: string           # 版本号
+    chn 2: integer          # 渠道号
+    id 3: integer           # 事件ID
+    count 4: integer        # 事件数量
+    beginTime 5: integer    # 开始时间
+    endTime 6: integer      # 结束时间
+}
+
+# 事件统计
+h5event_client_log_event 21100 {
+    request {
+        uid 0: integer          # 玩家ID
+        ver 1: string           # 版本号
+        chn 2: integer          # 渠道号
+        events 3: *DataEvent    # 事件列表
+        udid 4: string          # 玩家uuid，给未注册玩家使用
+    }
+    response {
+        code 0: integer
+    }
+}
+
+# 事件次数统计（数量太多的时候）
+h5event_client_log_event_count 21101 {
+    request {
+        uid 0: integer          # 玩家ID
+        ver 1: string           # 版本号
+        chn 2: integer          # 渠道号
+        events 3: *DataCountEvent   # 事件列表
+    }
+    response {
+        code 0: integer
+    }
+}

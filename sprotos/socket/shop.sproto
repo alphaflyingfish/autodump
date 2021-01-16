@@ -1,0 +1,70 @@
+
+
+# 商品获取途径
+.goodsGet {
+    getType 0: *integer
+}
+
+# 商品信息
+.goodsItem {
+    id 0: integer           # 物品ID
+    count 1: integer        # 物品数量
+    maxCount 2: integer     # 最大数量
+}
+
+# 商品价值
+.goodsValue {
+    id 0: integer           # ID
+    count 1: integer        # 数量
+}
+
+# 福利 商品信息
+.goods {
+    goodsId 0: integer          # 商品ID
+    positionId 1: integer       # 商品广告位ID
+    items 2: *goodsItem         # 商品包含物品信息
+    remainTimes 3: integer      # 剩余次数 -1表示无次数限制
+    buyTimes 4: integer         # 已购次数
+    coldTime 5: integer         # 冷却时间
+    values 6: *goodsValue       # 商品价值
+    unlocking 7: integer        # 解锁等级
+    goodsName 8: string         # 商品名称
+    goodsIcon 9: string         # 商品图标
+}
+
+# 商城模块
+.shopModule {
+    icon 0: string          # 标题
+    seq 1: integer          # 模块排序
+    get 2: *goodsGet        # 获取途径
+    moduleId 3: integer     # 模块ID
+    upWindows 4: integer    # 是否开二级弹窗
+    goodsList 5: *goods     # 商城物品列表
+}
+
+# 获取商城信息
+shop_get_info 4000 {
+    request {
+
+    }
+    response {
+        code 0: integer
+        moduleList 1: *shopModule #商城模块信息
+    }
+}
+
+# 购买商品
+shop_buy_goods 4001 {
+    request {
+        moduleId 0: integer         # 模块ID
+        goodsId 1: integer          # 商品ID
+    }
+
+    response {
+        code 0: integer
+        coldTime 1: integer         # 冷却时间
+        items 2: *DataItem          # 商品物品信息
+        remainTimes 3: integer      # 剩余次数
+        buyTimes 4: integer         # 已购次数
+    }
+}

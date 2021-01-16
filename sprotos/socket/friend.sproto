@@ -1,0 +1,78 @@
+
+# 好友信息
+.DataFriendInfo {
+    uid 0: integer                  # 玩家uid
+    nickname 1: string              # 玩家昵称
+    bandingTime 2: integer          # 绑定时间
+    lastLogin 3: integer            # 上次登陆时间
+    lvPass 4: integer               # 通关等级
+}
+# 好友任务信息
+.DataTaskFriend {
+    id 0: integer                   # 任务ID
+    progress 1: integer             # 当前进度
+    status 2: integer               # 状态，0:不可领取，1:可领取，2:已领取
+    countFriend 3: integer          # 完成人数
+    maxProgress 4: integer          # 好友通关等级
+    items 5: *DataItem              # 任务奖励物品列表
+}
+
+# 好友 - 获取信息
+friend_get_info 2100 {
+    request {
+        uid 0: integer                  # 玩家ID
+    }
+    response {
+        code 0: integer
+        lvPass 1: integer               # 有效好友通关等级
+        taskConfigId 2: integer         # 任务方案ID
+        adTimes 3: integer              # 有效好友广告次数
+    }
+}
+
+# 好友 - 绑定
+friend_user_banding 2101 {
+    request {
+        uid 0: integer                  # 玩家ID
+        shareCode 1: string             # 邀请码
+    }
+    response {
+        code 0: integer
+    }
+}
+
+# 好友 - 信息列表
+friend_get_user_info_list 2102 {
+    request {
+        uid 0: integer                  # 玩家ID
+        startIndex 1: integer           # 开始位置(1:为起始位置)
+        count 2: integer                # 请求好友数量
+    }
+    response {
+        code 0: integer
+        friendList 1: *DataFriendInfo   # 好友信息列表
+    }
+}
+
+# 好友 - 任务信息列表
+friend_task_get_info_list 2103 {
+    request {
+        uid 0: integer                  # 玩家ID
+    }
+    response {
+        code 0: integer
+        taskList 1: *DataTaskFriend     # 好友信息列表
+    }
+}
+
+# 好友 - 领取任务奖励
+friend_task_get_award 2104 {
+    request {
+        uid 0: integer                  # 玩家ID
+        id 1: integer                   # 任务ID
+    }
+    response {
+        code 0: integer
+        items 1: *DataItem              # 奖励物品列表
+    }
+}

@@ -1,0 +1,191 @@
+-- 提现相关协议 16000+
+
+local proto_struct =
+    [[
+    # 提现任务
+    .DataWithdrawTask {
+        taskId 0: integer               # 任务ID
+        index 1: integer                # 序号
+        contentType 2: integer          # 任务类型（1展示进度是展示剩余进度，2展示进度是展示当前进度）
+        content 3: string               # 任务文案
+        maxProgress 4: integer          # 达成任务的进度
+        actionTitle 5: string           # 前往按钮文案
+        actionId 6: integer             # 前往动作ID
+        params 7: string                # 前往动作参数（json）
+
+        progress 20: integer            # 当前进度
+        status 21: integer              # 任务状态（0未完成，1已完成）
+        todayDone 22: boolean           # 今天是否已完成
+    }
+
+    # 提现任务状态
+    .DataWithdrawTaskUpdate {
+        hbId 0: integer                 # 提现红包Id
+        taskId 1: integer               # 任务id
+        progress 2: integer             # 任务进度
+        todayDone 3: boolean            # 今天是否已完成
+    }
+
+    # 单个提现红包信息
+    .DataWithdrawHb {
+        hbId 0: integer                 # 提现红包Id
+        seq 1: integer                  # 排序
+        hbType 2: integer               # 提现类型（1新人专享，2小额提现，3大额提现）
+        hbCount 3: integer              # 红包金额（单位是分）
+        consumeItems 4: *DataItem       # 消耗物品列表
+        maxTimes 5: integer             # 终身次数限制
+
+        remainTimes 20: integer         # 剩余可兑换次数
+        taskList 21: *DataWithdrawTask  # 任务列表
+        status 22: integer              # 提现红包状态（0任务未开启，1任务未达成，2任务已达成）
+        wdType 23: *integer             # 可提现类型列表(1:微信红包码 2:支付宝 3:微信转账) - 1.2版本信息
+    }
+
+    # 提现统计信息
+    .DataWithdrawInfo {
+        totalTimes 1: integer           # 终身提现次数
+        dayTimes 2: integer             # 当天提现次数
+        totalCount 3: integer           # 终身提现金额（单位分）
+        dayCount 4: integer             # 当天提现金额（单位分）
+        limitTimes 5: integer           # 限制 - 终身次数
+        limitDayTimes 6: integer        # 限制 - 当天次数
+        limitCount 7: integer           # 限制 - 终身金额
+        limitDayCount 8: integer        # 限制 - 当天金额
+        alipayAccount 9: string         # 支付宝账号
+        alipayName 10: string           # 支付宝昵称
+        wxOpenId 11: string             # 微信账号ID
+        wxName 12: string               # 微信昵称
+    }
+
+    # 提现记录信息
+    .DataWithdrawRecord {
+        id 0: integer                   # 记录ID
+        dType 1: integer                # 提现类型（1:微信，2:支付宝, 3:微信转账）
+        status 2: integer               # 订单状态（0:未领取；1:审核中；2:发放成功；3:发放失败；4:拒绝）
+        orderNo 3: string               # 订单号
+        rCode 4: string                 # 红包码
+        money 5: integer                # 提现金额（单位分）
+        time 6: integer                 # 申请时间
+    }
+]]
+
+local proto_c2s =
+    [[
+    # 提现 - 获取可兑换信息
+    withdraw_get_info 16000 {
+        request {
+            uid 0: integer
+        }
+        response {
+            code 0: integer
+            list 1: *DataWithdrawHb     # 提现红包信息列表
+            info 2: DataWithdrawInfo    # 提现统计信息
+        }
+    }
+
+    # 提现 - 请求开启任务
+    withdraw_open_task 16001 {
+        request {
+            uid 0: integer
+            hbId 1: integer             # 提现红包Id
+            oldHbId 2: integer          # 放弃的小额提现的提现红包Id。小额提现只能有一个红包开启任务
+        }
+        response {
+            code 0: integer
+            list 1: *DataWithdrawHb     # 更新提现信息（小额红包可能是更新新旧2个提现信息）
+        }
+    }
+
+    # 提现 - 请求提现
+    withdraw_withdraw 16002 {
+        request {
+            uid 0: integer
+            hbId 1: integer             # 提现红包Id
+            dType 2: integer            # 提现方式（1:微信，2:支付宝, 3:微信转账）
+            alipayAccount 3: string     # 支付宝账号
+            alipayName 4: string        # 支付宝昵称
+            testData 5: string          # 调试参数（json）[isRealWithDraw:是否真实领 1:为真实领取 0:测试领取（不到账） status:订单状态，code:订单code]
+            wxOpenId 6: string          # 微信openId - 1.2版本信息
+            wxName 7: string            # 微信昵称 - 1.2版本信息
+        }
+        response {
+            code 0: integer
+            orderNo 1: string           # 订单号
+            rCode 2: string             # 红包码
+            info 3: DataWithdrawInfo    # 提现统计信息
+            remainTimes 4: integer      # 剩余可兑换次数
+        }
+    }
+
+    # 提现 - 提现记录
+    withdraw_record_list 16003 {
+        request {
+            uid 0: integer
+        }
+        response {
+            code 0: integer
+            list 1: *DataWithdrawRecord # 提现记录
+        }
+    }
+
+    # 提现 - 视频签到
+    withdraw_ad_sign 16004 {
+        request {
+            uid 0: integer
+            hbId 1: integer                 # 提现红包Id
+        }
+        response {
+            code 0: integer
+        }
+    }
+]]
+
+local proto_s2c =
+    [[
+    # 推送 - 提现 - 提现结果
+    on_withdraw_result 16000 {
+        request {
+            orderNo 0: string               # 订单号
+            status 1: integer               # 订单状态（0:未领取；1:审核中；2:发放成功；3:发放失败；4:拒绝）
+            money 2: integer                # 订单金额（单位分）
+            info 3: DataWithdrawInfo        # 提现统计信息
+        }
+    }
+
+    # 推送 - 提现 - 任务进度更新
+    on_withdraw_task_progress 16001 {
+        request {
+            list 0: *DataWithdrawTaskUpdate # 提现ID任务更新列表
+        }
+    }
+
+    # 推送 - 提现 - 提现红包信息更新（任务列表和状态改变时）
+    on_withdraw_item_update 16002 {
+        request {
+            item 0: DataWithdrawHb          # 更新提现信息
+        }
+    }
+
+    # 提现结果 -（2.0版本解除绑定提现支付宝/微信账号）
+    on_backpack_withdraw 20200 {
+        request {
+            orderNo 0: string               # 订单号
+            status 1: integer               # 订单状态（0:未领取；1:审核中；2:发放成功；3:发放失败；4:拒绝）
+            dayTimes 2: integer             # 当天提现次数
+            dayCount 3: integer             # 当天提现金额（单位分）
+            alipayAccount 4: string         # 支付宝账号(会只传此字段，绑定账号时用，“”：为解绑)
+            alipayName 5: string            # 支付宝昵称(会只传此字段，绑定账号时用，“”：为解绑)
+            money 6: integer                # 订单金额（单位分）
+            dType 7: integer                # 提现类型（1:微信红包码(暂不处理), 2:支付宝, 3:微信转账）
+            wxOpenId 8: string              # 微信账号ID
+            wxName 9: string                # 微信昵称
+        }
+    }
+]]
+
+local proto = {
+    c2s = proto_struct .. proto_c2s,
+    s2c = proto_struct .. proto_s2c
+}
+
+return proto

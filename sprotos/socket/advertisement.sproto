@@ -1,0 +1,65 @@
+
+
+
+# 广告展示位置
+.DataAdPositionInfo {
+    id 0: integer                   # 序号
+    positionId 1: integer           # 展示位置ID
+    adNo 2: integer                 # 聚合No
+    awardTimes 3: integer           # 可领取次数
+    lastAwardTime 4: integer        # 上次领取奖励时间
+    intervalTime 5: integer         # 广告奖励间隔时间
+    moduleId 6: integer             # 关联功能ID
+    moduleParams 7: string          # 关联功能参数(json)
+}
+
+# 广告信息
+.DataAdsInfo {
+    id 0: integer                   # 编号
+    adNo 1: integer                 # 广告编号
+    adType 2: integer               # 广告类型
+    adId 3: string                  # 广告标签
+    sdkName 4: string               # sdk类型
+    maxDayShowTimes 5: integer      # 当天最大曝光次数
+    intervalShow 7: integer         # 曝光间隔时间（单位秒）
+    priorityShow 8: integer         # 曝光优先值
+    maxFailedShow 10: integer       # 该次加载失败次数限制
+}
+
+# 获取广告信息
+h5advertisement_get_info_v2 14103 {
+    request {
+        uid 0: integer
+    }
+    response {
+        code 0: integer                 # 返回码
+        posList 1: *DataAdPositionInfo  # 广告位置列表
+        adsInfoList 2: *DataAdsInfo     # 广告位信息列表
+    }
+}
+
+# 领取该广告方案奖励
+h5advertisement_get_award_v2 14104 {
+    request {
+        uid 0: integer
+        id 1: integer                   # 领取位置编号
+    }
+    response {
+        code 0: integer                 # 返回码
+        items 1: *DataItem              # 奖励物品
+        lastAwardTime 2: integer        # 上次领取奖励时间
+    }
+}
+
+# 广告动作
+h5advertisement_update_info_v2 14105 {
+    request {
+        uid 0: integer
+        id 1: integer                   # 广告位置序号
+        actionId 2: integer             # 广告动作 0:展示一次 1:点击一次 2:广告播放完毕
+        adType 3: integer               # 广告类型
+    }
+    response {
+        code 0: integer                 # 返回码
+    }
+}

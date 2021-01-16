@@ -1,0 +1,13 @@
+
+
+# 连接游戏服务器，验证token是否有效
+usr_auth_token 1001 {
+    request {
+        uid 0: integer
+        token 1: string
+    }
+    response {
+        code 0: integer
+    }
+}
+

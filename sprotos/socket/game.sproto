@@ -1,0 +1,164 @@
+
+# 关卡参数
+.DataGameParams {
+    lv 0: integer               # 关卡等级
+    countColor 1: integer       # 颜色数量
+    countSnakeRange 2: *integer # 大龙数范围
+    lenSnakeRange 3: *integer   # 大龙长度范围
+    passPoint 4: integer        # 过关分数
+    limitTime 5: integer        # 限制 - 时长（单位秒）
+    limitStep 6: integer        # 限制 - 步数
+    items 7: *DataItem          # 过关奖励物品
+    exItems 8: *DataItem        # 强力开局物品
+    exInitPoint 9: integer      # 初始开局分数
+    lvType 10: integer          # 关卡类型
+}
+
+# 红钻计算参数
+.DataGameCalculateParams {
+    minLength 0: integer        # 获得红钻的最小长度
+    maxAwardCount 1: integer    # 单次获得红钻的最大数量
+    a 2: integer                # 计算参数A
+    b 3: integer                # 计算参数B
+    c 4: integer                # 计算参数C
+}
+
+# 每一次消除的数据
+.DataGameStep {
+    id 0: integer               # 龙虾的id(6:红包龙虾)
+    count 1: integer            # 消除的数量
+}
+
+# 开始游戏 - 1.2.1之前版本使用
+game_xcxlx_start 2000 {
+    request {
+        uid 0: integer              # 玩家ID
+        testData 1: string          # 调试数据（json）[lv:开始等级]
+    }
+    response {
+        code 0: integer
+        gameInfo 1: DataGameParams  # 当前关卡
+        timesRestart 8: integer     # 当前关卡重复开局次数
+    }
+}
+
+# 结算 - 1.2.1之前版本使用
+game_xcxlx_settle 2001 {
+    request {
+        uid 0: integer              # 玩家ID
+        stepList 1: *integer        # 每次消除格子数列表
+        usedItems 2: *DataItem      # 使用物品列表
+        points 3: integer           # 玩家过关分数
+        countBlocks 4: integer      # 剩余方块数
+    }
+    response {
+        code 0: integer
+        isPass 1: boolean           # 是否通关
+        items 2: *DataItem          # 通关奖励
+        exItems 4: *DataItem        # 强力开局物品
+        currLv 5: integer           # 当前关卡
+        rItems 6: *DataItem         # 红钻物品
+        exInitPoint 7: integer      # 当前关卡强力开局初始分数
+        energy 8: integer           # 当天体力
+        doubleTimes 9: integer      # 广告领取红钻物品倍数
+        adItemes 10: *DataItem      # 广告领取红钻物品
+    }
+}
+
+# 关卡信息列表
+game_xcxlx_lv_info_list 2002 {
+    request {
+        uid 0: integer              # 玩家ID
+        count 1: integer            # 当前关卡前后关卡数
+    }
+    response {
+        code 0: integer
+        currLv 1: integer           # 当前关卡
+        gameInfoList 2: *DataGameParams # 关卡信息列表
+    }
+}
+
+# 结算 - 看广告领红钻
+game_xcxlx_settle_get_ad_award 2003 {
+    request {
+        uid 0: integer              # 玩家ID
+    }
+    response {
+        code 0: integer
+        items 1: *DataItem          # 物品列表
+    }
+}
+
+# 开始游戏 V2 - 1.2.1开始使用
+game_xcxlx_start_v2 2004 {
+    request {
+        uid 0: integer              # 玩家ID
+        testData 1: string          # 调试数据（json）[lv:开始等级]
+    }
+    response {
+        code 0: integer
+        gameInfo 1: DataGameParams  # 当前关卡
+        timesRestart 2: integer     # 当前关卡重复开局次数
+        normalParams 3: DataGameCalculateParams     # 普通龙虾消除获得红钻的计算参数
+        diamondParams 4: DataGameCalculateParams    # 红钻龙虾消除获得红钻的计算参数
+        rcCount 5: integer          # 红包龙虾获得红钻的数量（0表示不生成红包龙虾）
+    }
+}
+
+# 结算 V2 - 1.2.1开始使用
+game_xcxlx_settle_v2 2005 {
+    request {
+        uid 0: integer              # 玩家ID
+        stepList 1: *DataGameStep   # 每次消除信息的列表
+        usedItems 2: *DataItem      # 使用物品列表
+        points 3: integer           # 玩家过关分数
+        countBlocks 4: integer      # 剩余方块数
+    }
+    response {
+        code 0: integer
+        isPass 1: boolean           # 是否通关
+        items 2: *DataItem          # 通关奖励
+        exItems 4: *DataItem        # 强力开局物品
+        currLv 5: integer           # 当前关卡
+        rItems 6: *DataItem         # 红钻物品
+        exInitPoint 7: integer      # 当前关卡强力开局初始分数
+        energy 8: integer           # 当天体力
+        doubleTimes 9: integer      # 广告领取红钻物品倍数
+        adItemes 10: *DataItem      # 广告领取红钻物品
+    }
+}
+
+# 关卡信息列表
+game_xcxlx_lv_info_list_v2 2006 {
+    request {
+        uid 0: integer              # 玩家ID
+        count 1: integer            # 当前关卡前后关卡数
+    }
+    response {
+        code 0: integer
+        currLv 1: integer           # 当前关卡
+        gameInfoList 2: *DataGameParams # 关卡信息列表
+    }
+}
+
+# 结算 - 看广告领红钻
+game_xcxlx_settle_get_ad_award_v2 2007 {
+    request {
+        uid 0: integer              # 玩家ID
+    }
+    response {
+        code 0: integer
+        items 1: *DataItem          # 物品列表
+    }
+}
+
+# 领取红包龙虾奖励
+game_xcxlx_get_rc_award 2008 {
+    request {
+        uid 0: integer              # 玩家ID
+    }
+    response {
+        code 0: integer
+        items 1: *DataItem          # 物品列表
+    }
+}

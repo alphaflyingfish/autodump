@@ -1,0 +1,56 @@
+
+# 邮件信息
+.DataMail {
+    id 0: integer               # 消息ID
+    timestamp 1: integer        # 发送消息时间
+    content 2: string           # JSON string
+    get 3: boolean              # 是否已经领取奖励
+    mType 4: integer            # 邮件类型 （1:GM邮件）
+    expireTime 5: integer       # 过期时间
+}
+
+#读取系统发送消息
+mail_getMails 21200 {
+    request {
+        uid 0: integer
+        lastTimestamp 1: integer    #上次获取消息时间戳
+    }
+
+    response {
+        code 0: integer
+        msgs 1: *DataMail
+        sysTime 2: integer          # 系统时间
+    }
+}
+
+#获取消息奖励
+mail_getAward 21201 {
+    request {
+        uid 0: integer
+        id 1: integer               # 消息ID
+    }
+
+    response {
+        code 0: integer
+        items 1: *DataItem
+    }
+}
+
+# 一键领取所有奖励
+mail_getAllAward 21202 {
+    request {
+        uid 0: integer
+    }
+
+    response {
+        code 0: integer
+        items 1: *DataItem
+    }
+}
+
+# 系统跑马灯信息推送
+on_message_marquee_info 21200 {
+    request {
+        marqueeList 0: *string                  # 跑马灯列表
+    }
+}

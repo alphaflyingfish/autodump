@@ -1,0 +1,104 @@
+
+
+#出战卡牌信息
+.useCardPos {
+    cardId  0: integer  # 出战卡牌ID
+    pos 1: integer      # 位置ID
+}
+# 使用卡组
+.useClass {
+    classId 0: integer  # 卡组ID
+    list 1: *useCardPos # 卡牌ID列表
+}
+
+# 卡牌
+.card {
+    id 0: integer       # 卡牌ID
+    lv 1: integer       # 卡牌等级
+    puzzle 2: integer   # 卡牌碎片数量
+    status 3: integer   # 卡牌状态
+}
+
+
+
+# 获取卡牌信息
+card_getInfo 3000 {
+    request {
+    }
+    response {
+        code 0: integer
+        ownCardList 1: *card        # 拥有卡牌列表
+        useCardList 2: *useClass    # 使用卡组列表
+        usingClassId 3: integer     # 当前出战卡组ID
+    }
+}
+
+# 加入出战卡组
+card_addUseCard 3001 {
+    request {
+        classId 0: integer      # 卡组ID
+        cardId 1: integer       # 出战卡牌ID(新)
+        replaceId 2: integer    # 替换卡牌ID(这个传值的话表示替换)(旧)
+        pos 3: integer          # 替换位置ID
+    }
+    response {
+        code 0: integer
+        carClass 1: useClass
+    }
+}
+
+# 移除出战卡组
+card_removeUseCard 3002 {
+    request {
+        classId 0: integer      # 卡组ID
+        cardId 1: integer       # 出战卡牌ID
+    }
+    response {
+        code 0: integer
+        carClass 1: useClass
+    }
+}
+
+# 升级卡牌
+card_upgradeCard 3003 {
+    request {
+        cardId 0: integer       # 卡牌ID
+    }
+    response {
+        code 0: integer
+        cardInfo 1: card
+    }
+}
+
+# 使用卡组
+card_useCardClass 3004 {
+    request {
+        classId 0: integer      # 卡组ID
+    }
+    response {
+        code 0: integer
+        usingClassId 1: integer # 当前出战卡组ID
+    }
+}
+
+# GM 增加卡牌碎片
+card_addCardPuzzle 3005 {
+    request {
+        cardId 0: integer       # 卡牌ID
+        count 1: integer        # 数量
+    }
+    response {
+        code 0: integer
+        cardInfo 1: card
+    }
+}
+
+# GM 设置竞技场等级
+card_gmSetSceneLv 3006 {
+    request {
+        sceneLv 0: integer      # 竞技场等级
+    }
+    response {
+        code 0: integer
+    }
+}

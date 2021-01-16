@@ -46,7 +46,7 @@ activity_get_config_list 20802 {
 }
 
 # 活动信息更新
-on_activity_notify 20890 {
+on_activity_notify 20800 {
     request {
         aId 0: integer              # 活动id
         cmd 1: string               # 推送命令
